@@ -16,48 +16,47 @@ int code;
 
 string createMailBody()
 {
-	string body = "\"<html><body>"+key+"</body></html>\"";
-	return body;
+    string body = "\"<html><body>"+key+"</body></html>\"";
+    return body;
 }
 
 void sendEmail()
 {
-	string sender = "noreply@tarves.no";
-	string subject = "\"testing cpp\"";
-	string content = "\"Content-Type: text/html\"";
-	string shellCommand = "echo "+createMailBody()+
-		 " > /tmp/mailbody && mail -a "+content+
-		 " -s "+subject+" -r "+sender+" "+email+
-		 " < /tmp/mailbody";
-	cout << shellCommand << endl;
-	system(shellCommand.c_str());
+    string sender = "noreply@tarves.no";
+    string subject = "\"testing cpp\"";
+    string content = "\"Content-Type: text/html\"";
+    string shellCommand = "echo "+createMailBody()+
+            " > /tmp/mailbody && mail -a "+content+
+            " -s "+subject+" -r "+sender+" "+email+
+            " < /tmp/mailbody";
+    cout << shellCommand << endl;
+    system(shellCommand.c_str());
 
 }
 
 void parseBuffer(char* buffer,int length)
 {
-  code = (int)buffer[0];
-	string output = "";
-  bool swap = false;
-  int count = 0;
-	for(int i=1;i<length;i++)
-	{
-		char temp = buffer[i];
-    if(temp=='\n')
+    code = (int)buffer[0];
+    string output = "";
+    int count = 0;
+    for(int i=1;i<length;i++)
     {
-      count++;
-      continue;
+        char temp = buffer[i];
+        if(temp=='\n')
+        {
+            count++;
+            continue;
+        }
+        if(count==0)
+        {
+            email+=temp;
+        }
+        if(count==1)
+        {
+            key+=temp;
+        }
+
     }
-    if(count==0)
-		{
-			email+=temp;
-		}
-    if(count==1)
-    {
-      key+=temp;
-    }
-    
-	}
 
 }
 
@@ -71,30 +70,30 @@ int createSocket(int port)
     addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     s = socket(AF_INET, SOCK_STREAM, 0);
-    if (s < 0) 
+    if (s < 0)
     {
-       perror("Unable to create socket");
-       exit(EXIT_FAILURE);
-   }
+        perror("Unable to create socket");
+        exit(EXIT_FAILURE);
+    }
 
-   if (bind(s, (struct sockaddr*)&addr, sizeof(addr)) < 0) 
-   {
-       perror("Unable to bind");
-       exit(EXIT_FAILURE);
-   }
+    if (bind(s, (struct sockaddr*)&addr, sizeof(addr)) < 0)
+    {
+        perror("Unable to bind");
+        exit(EXIT_FAILURE);
+    }
 
-   if (listen(s, 1) < 0) 
-   {
-       perror("Unable to listen");
-       exit(EXIT_FAILURE);
-   }
+    if (listen(s, 1) < 0)
+    {
+        perror("Unable to listen");
+        exit(EXIT_FAILURE);
+    }
 
-   return s;
+    return s;
 }
 
 void initOpenSSL()
 { 
-    SSL_load_error_strings();	
+    SSL_load_error_strings();
     OpenSSL_add_ssl_algorithms();
 }
 
@@ -111,14 +110,14 @@ SSL_CTX *createContext()
     method = SSLv23_server_method();
 
     ctx = SSL_CTX_new(method);
-    if (!ctx) 
+    if (!ctx)
     {
-       perror("Unable to create SSL context");
-       ERR_print_errors_fp(stderr);
-       exit(EXIT_FAILURE);
-   }
+        perror("Unable to create SSL context");
+        ERR_print_errors_fp(stderr);
+        exit(EXIT_FAILURE);
+    }
 
-   return ctx;
+    return ctx;
 }
 
 void configureContect(SSL_CTX *ctx)
@@ -127,13 +126,13 @@ void configureContect(SSL_CTX *ctx)
 
     /* Set the key and cert */
     
-    if (SSL_CTX_use_certificate_file(ctx, "cert.pem", SSL_FILETYPE_PEM) <= 0) 
+    if (SSL_CTX_use_certificate_file(ctx, "cert.pem", SSL_FILETYPE_PEM) <= 0)
     {
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);
     }
 
-    if (SSL_CTX_use_PrivateKey_file(ctx, "key.pem", SSL_FILETYPE_PEM) <= 0 ) 
+    if (SSL_CTX_use_PrivateKey_file(ctx, "key.pem", SSL_FILETYPE_PEM) <= 0 )
     {
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);
@@ -158,10 +157,10 @@ int main(int argc, char **argv)
         uint len = sizeof(addr);
         SSL *ssl;
         const char reply[] = "1";
-	      char readBuffer[255];
+        char readBuffer[255];
 
         int client = accept(sock, (struct sockaddr*)&addr, &len);
-        if (client < 0) 
+        if (client < 0)
         {
             perror("Unable to accept");
             exit(EXIT_FAILURE);
@@ -176,9 +175,9 @@ int main(int argc, char **argv)
         }
         else
         {
-      	    SSL_read(ssl,readBuffer,255);
-      	    parseBuffer(readBuffer,255);
-      	    sendEmail();
+            SSL_read(ssl,readBuffer,255);
+            parseBuffer(readBuffer,255);
+            sendEmail();
             //SSL_write(ssl, reply, strlen(reply));
         }
 
