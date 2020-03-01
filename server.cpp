@@ -14,23 +14,11 @@ using namespace std;
 
 void Server::start()
 {
-    /*int sock;
-    SSL_CTX *ctx;
-
-    initOpenSSL();
-    ctx = createContext();
-
-    configureContect(ctx);
-
-    sock = createSocket(12321);*/
-
     /* Handle connections */
     while(1) {
         struct sockaddr_in addr;
         uint len = sizeof(addr);
         SSL *ssl;
-        const char reply[] = "1";
-        char readBuffer[255];
 
         int client = accept(sock, (struct sockaddr*)&addr, &len);
         if (client < 0)
@@ -49,10 +37,7 @@ void Server::start()
         pid=fork();
         if(pid==0)
         {
-            SSL_read(ssl,readBuffer,255);
-            parseBuffer(readBuffer,255);
-            //sendEmail();
-            //SSL_write(ssl, reply, strlen(reply));
+            handleClient(ssl);
             exit(0);
         }
         else
@@ -70,26 +55,13 @@ void Server::start()
 
 void Server::handleClient(SSL* ssl)
 {
-    std::cout << "Handled";
-    const char reply[] = "Handled";
-    SSL_write(ssl, reply, strlen(reply));
-    //char readBuffer[255];
-    //SSL_read(ssl,readBuffer,255);
-    //parseBuffer(readBuffer,255);
+    char readBuffer[255];
+    SSL_read(ssl,readBuffer,255);
+    parseBuffer(readBuffer,255);
 }
 
 Server::Server(int port)
 {
-
-     /*int sock;
-    SSL_CTX *ctx;
-
-    initOpenSSL();
-    ctx = createContext();
-
-    configureContect(ctx);
-
-    sock = createSocket(12321);*/
     initOpenSSL();
     ctx = createContext();
     configureContect(ctx);
