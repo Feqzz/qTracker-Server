@@ -4,7 +4,7 @@ CPPFLAGS = -L/usr/lib
 LDFLAGS = -lssl -lcrypto
 FLAGS = -Wall -ggdb
 
-OBJS = server.o
+OBJS = main.o email.o server.o
 
 all: $(PROG) .depend
 
