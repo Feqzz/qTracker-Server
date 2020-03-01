@@ -10,7 +10,6 @@
 #include <openssl/err.h>
 
 #include <iostream>
-using namespace std;
 
 void Server::start()
 {
@@ -70,36 +69,29 @@ Server::Server(int port)
 
 void Server::parseBuffer(char* buffer,int length)
 {
-    string email = "";
-    string key = "";
-    int code = (int)buffer[0];
-    
-    int count = 0;
+    std::vector<std::string> stringVector;
+    std::string tempString = "";
+
+    //0 is invite, 2 is forgotten password
+    int code = (int)buffer[0]-48;
+
     for(int i=1;i<length;i++)
     {
-        char temp = buffer[i];
-        if(temp=='\n')
+        char tempChar = buffer[i];
+        if(tempChar=='\n')
         {
-            count++;
-            continue;
+            stringVector.push_back(tempString);
+            tempString = "";
         }
-        if(count==0)
+        else
         {
-            email+=temp;
-        }
-        if(count==1)
-        {
-            key+=temp;
+            tempString += tempChar;
         }
 
     }
 
-    std::cout << email;
-    std::cout << std::endl;
-    std::cout << key;
-    std::cout << std::endl;
-    //Email email();
-
+    Email email(code,stringVector);
+    email.send();
 
 }
 

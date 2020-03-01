@@ -11,6 +11,7 @@
 #include <openssl/err.h>
 
 #include "email.h"
+#include <vector>
 
 #include <sys/types.h>
 #include <netinet/in.h>

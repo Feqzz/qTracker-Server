@@ -3,16 +3,19 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
 
 class Email
 {
 public:
-	Email();
-	std::string createMailBody();
-	void sendEmail();
+	Email(int code,std::vector<std::string> v);
+	void send();
 private:
-	std::string email;
-	std::string key;
+	void createInviteBody(std::string);
+	void createForgottenPasswordBody(std::string);
+	std::string body;
+	std::string recipentEmail;
+	std::string getRandomFilename();
 };
 
 #endif
