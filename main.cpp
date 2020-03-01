@@ -1,8 +1,8 @@
-#include "email.h"
 #include "server.h"
 
 int main()
 {
-	Server *server = new Server();
-	
+	Server server(12321);
+	server.start();
+	return 0;
 }

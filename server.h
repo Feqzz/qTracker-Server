@@ -10,12 +10,23 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 
+#include "email.h"
+
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <signal.h>
+#include <sys/wait.h>
+
 class Server
 {
 public:
-	Server();
+	Server(int port);
+	void start();
 private:
-	int code;
+	void handleClient(SSL *ssl);
+	int pid;
+	int sock;
+	SSL_CTX *ctx;
 	void parseBuffer(char* buffer,int length);
 	int createSocket(int port);
 	void initOpenSSL();

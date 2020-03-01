@@ -12,10 +12,9 @@
 #include <iostream>
 using namespace std;
 
-
-Server::Server()
+void Server::start()
 {
-    int sock;
+    /*int sock;
     SSL_CTX *ctx;
 
     initOpenSSL();
@@ -23,7 +22,7 @@ Server::Server()
 
     configureContect(ctx);
 
-    sock = createSocket(12321);
+    sock = createSocket(12321);*/
 
     /* Handle connections */
     while(1) {
@@ -47,17 +46,21 @@ Server::Server()
         {
             ERR_print_errors_fp(stderr);
         }
-        else
+        pid=fork();
+        if(pid==0)
         {
             SSL_read(ssl,readBuffer,255);
             parseBuffer(readBuffer,255);
             //sendEmail();
             //SSL_write(ssl, reply, strlen(reply));
+            exit(0);
         }
-
-        SSL_shutdown(ssl);
-        SSL_free(ssl);
-        close(client);
+        else
+        {
+            SSL_shutdown(ssl);
+            SSL_free(ssl);
+            close(client);
+        }
     }
 
     close(sock);
@@ -65,10 +68,40 @@ Server::Server()
     cleanupSSL();
 }
 
+void Server::handleClient(SSL* ssl)
+{
+    std::cout << "Handled";
+    const char reply[] = "Handled";
+    SSL_write(ssl, reply, strlen(reply));
+    //char readBuffer[255];
+    //SSL_read(ssl,readBuffer,255);
+    //parseBuffer(readBuffer,255);
+}
+
+Server::Server(int port)
+{
+
+     /*int sock;
+    SSL_CTX *ctx;
+
+    initOpenSSL();
+    ctx = createContext();
+
+    configureContect(ctx);
+
+    sock = createSocket(12321);*/
+    initOpenSSL();
+    ctx = createContext();
+    configureContect(ctx);
+    sock = createSocket(port);
+}
+
 void Server::parseBuffer(char* buffer,int length)
 {
-    code = (int)buffer[0];
-    string output = "";
+    string email = "";
+    string key = "";
+    int code = (int)buffer[0];
+    
     int count = 0;
     for(int i=1;i<length;i++)
     {
@@ -80,14 +113,21 @@ void Server::parseBuffer(char* buffer,int length)
         }
         if(count==0)
         {
-            //email+=temp;
+            email+=temp;
         }
         if(count==1)
         {
-            //key+=temp;
+            key+=temp;
         }
 
     }
+
+    std::cout << email;
+    std::cout << std::endl;
+    std::cout << key;
+    std::cout << std::endl;
+    //Email email();
+
 
 }
 
