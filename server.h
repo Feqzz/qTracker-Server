@@ -15,9 +15,13 @@ class Server
 public:
 	Server();
 private:
-	string email;
-	string key;
 	int code;
+	void parseBuffer(char* buffer,int length);
+	int createSocket(int port);
+	void initOpenSSL();
+	void cleanupSSL();
+	SSL_CTX* createContext();
+	void configureContect(SSL_CTX *ctx);
 };
 
 #endif

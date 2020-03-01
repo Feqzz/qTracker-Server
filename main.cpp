@@ -3,6 +3,6 @@
 
 int main()
 {
-	Server server* = new Server();
+	Server *server = new Server();
 	
 }

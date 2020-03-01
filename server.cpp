@@ -1,3 +1,5 @@
+#include "server.h"
+
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
@@ -49,7 +51,7 @@ Server::Server()
         {
             SSL_read(ssl,readBuffer,255);
             parseBuffer(readBuffer,255);
-            sendEmail();
+            //sendEmail();
             //SSL_write(ssl, reply, strlen(reply));
         }
 
@@ -78,11 +80,11 @@ void Server::parseBuffer(char* buffer,int length)
         }
         if(count==0)
         {
-            email+=temp;
+            //email+=temp;
         }
         if(count==1)
         {
-            key+=temp;
+            //key+=temp;
         }
 
     }
@@ -166,9 +168,4 @@ void Server::configureContect(SSL_CTX *ctx)
         ERR_print_errors_fp(stderr);
         exit(EXIT_FAILURE);
     }
-}
-
-int main(int argc, char **argv)
-{
-    
 }

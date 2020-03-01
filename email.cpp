@@ -5,22 +5,22 @@ Email::Email()
 
 }
 
-string Email::createMailBody()
+std::string Email::createMailBody()
 {
-    string body = "\"<html><body>"+key+"</body></html>\"";
+    std::string body = "\"<html><body>"+key+"</body></html>\"";
     return body;
 }
 
 void Email::sendEmail()
 {
-    string sender = "noreply@tarves.no";
-    string subject = "\"testing cpp\"";
-    string content = "\"Content-Type: text/html\"";
-    string shellCommand = "echo "+createMailBody()+
+    std::string sender = "noreply@tarves.no";
+    std::string subject = "\"testing cpp\"";
+    std::string content = "\"Content-Type: text/html\"";
+    std::string shellCommand = "echo "+createMailBody()+
             " > /tmp/mailbody && mail -a "+content+
             " -s "+subject+" -r "+sender+" "+email+
             " < /tmp/mailbody";
-    cout << shellCommand << endl;
+    std::cout << shellCommand << std::endl;
     system(shellCommand.c_str());
 
 }
