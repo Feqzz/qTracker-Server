@@ -54,9 +54,25 @@ void Server::start()
 
 void Server::handleClient(SSL* ssl)
 {
-    char readBuffer[255];
-    SSL_read(ssl,readBuffer,255);
-    parseBuffer(readBuffer,255);
+    //buffer size can be changed to whatever
+    int bufferSize = 255;
+    char readBuffer[bufferSize];
+    SSL_read(ssl,readBuffer,bufferSize);
+    std::vector<std::string> variables;
+    variables = parseBuffer(readBuffer,bufferSize);
+    int emailSuccess = sendEmail(variables);
+}
+
+int Server::sendEmail(std::vector<std::string> variables)
+{
+    int code = std::stoi(variables.at(0));
+    std::vector<std::string> stringVariables;
+    for(size_t i=1;i<variables.size();i++)
+    {
+        stringVariables.push_back(variables.at(i));
+    }
+    Email email(code,stringVector);
+    return email.send();
 }
 
 Server::Server(int port)
@@ -67,15 +83,15 @@ Server::Server(int port)
     sock = createSocket(port);
 }
 
-void Server::parseBuffer(char* buffer,int length)
+std::vector<std::string> Server::parseBuffer(char* buffer,int length)
 {
     std::vector<std::string> stringVector;
     std::string tempString = "";
 
-    //0 is invite, 2 is forgotten password
-    int code = (int)buffer[0]-48;
+    //0 is invite, 1 is forgotten password
+    //int code = (int)buffer[0]-48;
 
-    for(int i=1;i<length;i++)
+    for(int i=0;i<length;i++)
     {
         char tempChar = buffer[i];
         if(tempChar=='\n')
@@ -90,8 +106,7 @@ void Server::parseBuffer(char* buffer,int length)
 
     }
 
-    Email email(code,stringVector);
-    email.send();
+    return stringVector;
 
 }
 

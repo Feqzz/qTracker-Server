@@ -21,19 +21,20 @@
 class Server
 {
 public:
-	Server(int port);
+	Server(int);
 	void start();
 private:
-	void handleClient(SSL *ssl);
+	void handleClient(SSL*);
 	int pid;
 	int sock;
 	SSL_CTX *ctx;
-	void parseBuffer(char* buffer,int length);
-	int createSocket(int port);
+	std::vector<std::string> parseBuffer(char*,int);
+	int createSocket(int);
 	void initOpenSSL();
 	void cleanupSSL();
 	SSL_CTX* createContext();
-	void configureContect(SSL_CTX *ctx);
+	void configureContect(SSL_CTX*);
+	int sendEmail (std::vector<std::string>);
 };
 
 #endif

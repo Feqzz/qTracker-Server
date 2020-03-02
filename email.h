@@ -9,7 +9,7 @@ class Email
 {
 public:
 	Email(int code,std::vector<std::string> v);
-	void send();
+	int send();
 private:
 	void createInviteBody(std::string);
 	void createForgottenPasswordBody(std::string);

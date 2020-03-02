@@ -27,7 +27,7 @@ void Email::createForgottenPasswordBody(std::string password)
     body = "\"<html><body><h1>New password:</h1><br>"+password+"</body></html>\"";
 }
 
-void Email::send()
+int Email::send()
 {
     std::string sender = "noreply@tarves.no";
     std::string subject = "\"testing cpp\"";
@@ -38,7 +38,7 @@ void Email::send()
             " -s "+subject+" -r "+sender+" "+recipentEmail+
             " < /tmp/"+fileName+" && rm /tmp/"+fileName+"";
     //std::cout << shellCommand << std::endl;
-    system(shellCommand.c_str());
+    return system(shellCommand.c_str());
 }
 
 std::string Email::getRandomFilename(){
