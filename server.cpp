@@ -26,23 +26,33 @@ void Server::start()
             exit(EXIT_FAILURE);
         }
 
-        ssl = SSL_new(ctx);
-        SSL_set_fd(ssl, client);
-
-        if (SSL_accept(ssl) <= 0)
-        {
-            ERR_print_errors_fp(stderr);
-        }
         pid=fork();
         if(pid==0)
         {
-            handleClient(ssl);
-            exit(0);
+            ssl = SSL_new(ctx);
+            SSL_set_fd(ssl, client);
+
+            if (SSL_accept(ssl) <= 0)
+            {
+                ERR_print_errors_fp(stderr);
+            } 
+            else
+            {
+                handleClient(ssl);
+                /*const char reply[] = "1";
+                char readBuffer[10];
+                SSL_read(ssl,readBuffer,10);
+                SSL_write(ssl, reply, strlen(reply));*/
+
+                SSL_shutdown(ssl);
+                SSL_free(ssl);
+                exit(0);
+            }
         }
         else
         {
-            SSL_shutdown(ssl);
-            SSL_free(ssl);
+            
+
             close(client);
         }
     }
@@ -72,7 +82,10 @@ void Server::handleClient(SSL* ssl)
     {
         reply = "0";
     }
-    SSL_write(ssl, &reply[0], 1);
+    SSL_write(ssl,&reply[0],1);
+    /*const char asd[] = "1";
+    int test = SSL_write(ssl, asd, strlen(asd));
+    std::cout << test << "\n";*/
 }
 
 int Server::sendEmail(std::vector<std::string> variables)
