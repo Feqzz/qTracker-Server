@@ -1,19 +1,20 @@
 #include "email.h"
 
-Email::Email(int code,std::vector<std::string> v)
+Email::Email(std::vector<std::string> variables)
 {
     /* first string in vector should be email
     second string should be invite key or new password */
-    recipentEmail = v.at(0);
-    //std::cout << v.at(1);
+    int code = std::stoi(variables.at(0));
+    recipentEmail = variables.at(1);
+    //std::cout << variables.at(1);
     //std::cout << code;
     if(code == 0)
     {
-        createInviteBody(v.at(1));
+        createInviteBody(variables.at(2));
     }
     else if(code == 1)
     {
-        createForgottenPasswordBody(v.at(1));
+        createForgottenPasswordBody(variables.at(2));
     }
 }
 

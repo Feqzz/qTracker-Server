@@ -56,23 +56,34 @@ void Server::handleClient(SSL* ssl)
 {
     //buffer size can be changed to whatever
     int bufferSize = 255;
+    const char reply[];
     char readBuffer[bufferSize];
     SSL_read(ssl,readBuffer,bufferSize);
     std::vector<std::string> variables;
     variables = parseBuffer(readBuffer,bufferSize);
-    int emailSuccess = sendEmail(variables);
+    Email email(variables);
+    int emailSuccess = email.send();
+    //emailSuccess = -1 means the system call failed
+    if(emailSuccess>=0)
+    {
+        reply= "1";
+    }
+    else
+    {
+        reply= "0";
+    }
+    SSL_write(ssl, reply, strlen(reply));
 }
 
 int Server::sendEmail(std::vector<std::string> variables)
 {
-    int code = std::stoi(variables.at(0));
+    
     std::vector<std::string> stringVariables;
     for(size_t i=1;i<variables.size();i++)
     {
         stringVariables.push_back(variables.at(i));
     }
-    Email email(code,stringVector);
-    return email.send();
+    
 }
 
 Server::Server(int port)
