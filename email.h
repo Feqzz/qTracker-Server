@@ -8,7 +8,7 @@
 class Email
 {
 public:
-	Email(int code,std::vector<std::string> v);
+	Email(std::vector<std::string> v);
 	int send();
 private:
 	void createInviteBody(std::string);
