@@ -43,7 +43,7 @@ void Server::start()
                 char readBuffer[10];
                 SSL_read(ssl,readBuffer,10);
                 SSL_write(ssl, reply, strlen(reply));*/
-
+                signal(SIGCHLD,SIG_IGN);
                 SSL_shutdown(ssl);
                 SSL_free(ssl);
                 exit(0);
