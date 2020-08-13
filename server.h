@@ -34,7 +34,6 @@ private:
 	void cleanupSSL();
 	SSL_CTX* createContext();
 	void configureContect(SSL_CTX*);
-	int sendEmail (std::vector<std::string>);
 };
 
 #endif

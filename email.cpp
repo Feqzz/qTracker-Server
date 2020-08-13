@@ -17,17 +17,26 @@ Email::Email(std::vector<std::string> variables)
         createForgottenPasswordBody(variables.at(2));
     }
 }
-
+/**
+ * Creates a html body for use in a invite email
+ * @param key string containing the invite key
+ */
 void Email::createInviteBody(std::string key)
 {
     body = "\"<html><body><h1>Invite key:</h1><br>"+key+"</body></html>\"";
 }
-
+/**
+ * Creates a html body for use in a forgotten password email
+ * @param key string containing the password
+ */
 void Email::createForgottenPasswordBody(std::string password)
 {
     body = "\"<html><body><h1>New password:</h1><br>"+password+"</body></html>\"";
 }
-
+/**
+ * Creates a shell command, and executes it with a system() call
+ * @return int 0 or 1 depending on success
+ */
 int Email::send()
 {
     std::string sender = "noreply@tarves.no";
@@ -41,7 +50,11 @@ int Email::send()
     //std::cout << shellCommand << std::endl;
     return system(shellCommand.c_str());
 }
-
+/**
+ * The system call needs a file to temporarily store the email body.
+ * So we generate a random filename.
+ * @return string the random filename
+ */
 std::string Email::getRandomFilename(){
     std::string output = "";
     static const char alphanum[] =

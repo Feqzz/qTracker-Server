@@ -11,6 +11,19 @@
 
 #include <iostream>
 
+Server::Server(int port)
+{
+    initOpenSSL();
+    ctx = createContext();
+    configureContect(ctx);
+    sock = createSocket(port);
+}
+
+/**
+ * Creates a Secure TCP socket server and starts listening.
+ * It does not very if the certificate is valid only that is exists.
+ * The function also creates a new thread for each incoming request.
+ */
 void Server::start()
 {
     /* Handle connections */
@@ -61,7 +74,11 @@ void Server::start()
     SSL_CTX_free(ctx);
     cleanupSSL();
 }
-
+/**
+ * Read and parses the buffer from the socket connection and creates a Email object.
+ * Depending on the email sending success, a 0 or 1 is returned back to the TCP connection.
+ * @param ssl Secure Socket connection pointer
+ */
 void Server::handleClient(SSL* ssl)
 {
     //buffer size can be changed to whatever
@@ -88,25 +105,15 @@ void Server::handleClient(SSL* ssl)
     std::cout << test << "\n";*/
 }
 
-int Server::sendEmail(std::vector<std::string> variables)
-{
-    
-    std::vector<std::string> stringVariables;
-    for(size_t i=1;i<variables.size();i++)
-    {
-        stringVariables.push_back(variables.at(i));
-    }
-    
-}
 
-Server::Server(int port)
-{
-    initOpenSSL();
-    ctx = createContext();
-    configureContect(ctx);
-    sock = createSocket(port);
-}
 
+/**
+ * Iterates through the buffer to build strings, if a '\n' char is found a variable is finished
+ * and added to the return vector.
+ * @param buffer
+ * @param length
+ * @return std::vector<std::string> parsed data from buffer
+ */
 std::vector<std::string> Server::parseBuffer(char* buffer,int length)
 {
     std::vector<std::string> stringVector;
@@ -134,6 +141,11 @@ std::vector<std::string> Server::parseBuffer(char* buffer,int length)
 
 }
 
+/**
+ * Creates a TCP socket with the port number 'port'
+ * @param port
+ * @return int socket
+ */
 int Server::createSocket(int port)
 {
     int s;
@@ -164,18 +176,25 @@ int Server::createSocket(int port)
 
     return s;
 }
-
+/**
+ * @brief Server::initOpenSSL
+ */
 void Server::initOpenSSL()
 { 
     SSL_load_error_strings();
     OpenSSL_add_ssl_algorithms();
 }
-
+/**
+ * @brief Server::cleanupSSL
+ */
 void Server::cleanupSSL()
 {
     EVP_cleanup();
 }
-
+/**
+ * @brief Server::createContext
+ * @return SSL_CTX*
+ */
 SSL_CTX* Server::createContext()
 {
     const SSL_METHOD *method;
@@ -194,6 +213,10 @@ SSL_CTX* Server::createContext()
     return ctx;
 }
 
+/**
+ * @brief Server::configureContect
+ * @param SSL_CTX*
+ */
 void Server::configureContect(SSL_CTX *ctx)
 {
     SSL_CTX_set_ecdh_auto(ctx, 1);
