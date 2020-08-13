@@ -3,6 +3,7 @@ A mail sender program working over a tcp socket, compatible with the [qTracker-C
 
 # Dependencies
 * `postfix`
+* `openssl`
 
 # Documentation
 For the time being there is no documentation available. You might find the development process in 
