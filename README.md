@@ -6,7 +6,7 @@ A mail sender program working over a tcp socket, compatible with the [qTracker-C
 * `openssl`
 
 # Documentation
-For the time being there is no documentation available. You might find the development process in 
+The online documentation is available at this [website](https://tarves.no/docs/QTracker-Server/). You might find the development process in 
 the client's [wiki](https://github.com/Feqzz/qTracker-Client/wiki) interesting.
 
 # Client
