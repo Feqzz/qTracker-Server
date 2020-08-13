@@ -1,5 +1,11 @@
 #include "email.h"
-
+/**
+ * Reads the first variable in the vector and
+ * sends a invite email or forgotten password email
+ * depending on the int.
+ * @param variables vector with strings
+ * @return Email object
+ */
 Email::Email(std::vector<std::string> variables)
 {
     /* first string in vector should be email

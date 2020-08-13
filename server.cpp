@@ -10,7 +10,12 @@
 #include <openssl/err.h>
 
 #include <iostream>
-
+/**
+ * Initializes the openssl library, creates SSL context, configures it
+ * and creates a socket using the portnumber supplied
+ * @param int port 
+ * @return Server object
+ */
 Server::Server(int port)
 {
     initOpenSSL();
